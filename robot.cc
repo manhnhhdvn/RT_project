@@ -9,8 +9,9 @@ using namespace std;
 
 int main()
 {
-	system("gnome-terminal -x sh -c 'cd /home/GR/catkin_ws/wandrian ; roslaunch gscam gscam_nodelet.launch'");
-	system("gnome-terminal -x sh -c 'cd /home/GR/catkin_ws/wandrian ; rosrun mjpeg_server mjpeg_server'");
-	cout << "Done\n";
-	return 0;
+  system("gnome-terminal -x sh -c 'cd /home/GR/catkin_ws/wandrian ; roslaunch gscam gscam_nodelet.launch'");
+  system("gnome-terminal -x sh -c 'cd /home/GR/catkin_ws/wandrian ; rosrun mjpeg_server mjpeg_server'");
+  system("gnome-terminal -x sh -c 'cd /home/GR/catkin_ws/wandrian ; roslaunch kobuki_node minimal.launch'");
+  cout << "Done\n";
+  return 0;
 }
