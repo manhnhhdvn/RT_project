@@ -1,39 +1,26 @@
+####Description:
 
+    Stream video use mjpeg
+    Control kobuki robot with keyop
 
-####Project Properties:
+####Command:
 
+Change your current folder to catkin folder and run:
 
-_Go to_: 
+    $ catkin_make install
 
-__C/C++ General__ > __Paths and Symbols__ > __Include__ > __GNU C++__
+If error packet gstreamer-app-0.10 not found, you can run this command (Ubuntu 14.04 32bit):
 
-_Add_:
+    $ sudo apt-get install libgstreamer0.10-dev libgstreamer-plugins-base0.10-dev
 
- `/opt/ros/indigo/include`
- 
-####Setup:
+Continue run this command
 
-Change to catkin root directory then run:
+    $ roslaunch gscam YOUR_LAUNCH_FILE
 
-    $ catkin_make
-    $ . devel/setup.bash
-    $ . src/wandrian_run/setup.sh
+And open new terminal and run
 
-####Build for testing (for wandrian_run project):
+    $ rosrun mjpeg_server mjpeg_server 
 
-    $ cd src/wandrian_run/test/
-    $ ./test.sh 20 1 spiral_stc
+Open your browser and go this link
 
-####Running:
-
-#####1. wandrian_run project
-
-    $ roslaunch wandrian_run environment.launch world_file:=tmp
-    $ roslaunch wandrian_run run.launch plan_name:=spiral_stc starting_point_x:=0.75 starting_point_y:=-0.75 robot_size:=0.5
-
-#####2. wandrian_keyop project (2 robots versison)
-
-	$ roslaunch wandrian_keyop load_empty_world.launch
-	$ roslaunch wandrian_keyop robots.launch
-	$ roslaunch wandrian_keyop keyop.launch robot_name:=robot1
-	$ roslaunch wandrian_keyop keyop.launch robot_name:=robot2
+    http://localhost:8080/stream?topic=/YOUR_IMAGE_TOPIC
