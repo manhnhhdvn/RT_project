@@ -1,5 +1,6 @@
 <launch>
-  <arg name="DEVICE" default="/dev/video0"/>
+  <!-- <arg name="DEVICE" default="/dev/video0"/> -->
+  <arg name="DEVICE" default="/dev/video1"/>
   <!-- The GStreamer framerate needs to be an integral fraction -->
   <arg name="FPS" default="30/1"/>
 
