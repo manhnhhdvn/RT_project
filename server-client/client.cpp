@@ -1,16 +1,20 @@
-#include<stdio.h>
-#include<netinet/in.h>
-#include<sys/types.h>
-#include<sys/socket.h>
-#include<ctype.h>
-#include<string.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <netinet/in.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <ctype.h>
+#include <string.h>
+#include <stdlib.h>
+
+#include <ros/ros.h>
+#include <arpa/inet.h>
+
 #define MAX_SIZE 2000
-int main(){
+int main(int argc, char* argv[]) {
   struct sockaddr_in server;
   int sockfd;
-  char *sendMes=malloc(MAX_SIZE);
-  char *recvMes=malloc(MAX_SIZE);
+  char *sendMes = (char *) malloc (MAX_SIZE);
+  char *recvMes = (char *) malloc (MAX_SIZE);
   strcpy(sendMes,"");
   strcpy(recvMes,"");
   int countTotalRecvData=0, countTotalSendData=0, countRecvData=0, countSendData=0;
@@ -21,15 +25,15 @@ int main(){
   }else printf("Socket retrieve success!...\n");
   memset(&server,'0',sizeof(server));
   server.sin_family=AF_INET;
-  server.sin_addr.s_addr=inet_addr("192.168.0.115");
+  server.sin_addr.s_addr=inet_addr(argv[1]);
   server.sin_port=htons(5678);
   if(connect(sockfd,(struct sockaddr *)&server, sizeof(server))==-1){
     printf("Connect failed!\n");
     return 1;
   }else printf("Connected. Ready to communicate with server!\n");
   while(1){
-    sendMes=malloc(MAX_SIZE);
-    recvMes=malloc(MAX_SIZE);
+    sendMes = (char *) malloc (MAX_SIZE);
+    recvMes = (char *) malloc (MAX_SIZE);
     strcpy(sendMes,"");
     strcpy(recvMes,"");
     printf("Write anything: ");
@@ -42,7 +46,7 @@ int main(){
       printf("Send data failed!\n");
       return 1;
     }else if((strcmp(sendMes,"q")==0)||(strcmp(sendMes,"Q")==0)){
-      sendMes=malloc(MAX_SIZE);
+      sendMes = (char *) malloc (MAX_SIZE);
       strcpy(sendMes,"");
       printf("Disconnected!\n");
       printf("Total size of data sent: %d\n",countTotalSendData);
@@ -57,11 +61,11 @@ int main(){
       }else{
 	countTotalRecvData=countTotalRecvData+countRecvData;
 	printf("Server reply: %s\n",recvMes);
-	recvMes=malloc(MAX_SIZE);
+	recvMes = (char *) malloc (MAX_SIZE);
 	strcpy(recvMes,"");
       }
     }
   }
-  close(sockfd);
+  shutdown(sockfd,2);
   return 0;
 }
