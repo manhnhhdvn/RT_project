@@ -116,17 +116,6 @@ int main(int argc, char* argv[]) {
 	      printf("Total size of data sent to port %d: %d\n",fd,countTotalSendData[j]);
 	      shutdown(fd,2);
 	      client[j].fd=-1;
-	      /*for(k=0;k<max_client;k++){
-		printf("asdf");	
-		if((client[k].fd)!=-1){
-		  check=1;
-		  break;
-		}else{
-		check=0;
-		continue;		
-		}
-	      }
-	      printf("%d",check);*/
 	      if(numberClient==0){
 		do{
 		  printf("Do you want to keep server working?\n");
@@ -145,7 +134,6 @@ int main(int argc, char* argv[]) {
 		  return 0;
 		}
 	      }
-	      //   break;
 	    }else{
 	      countTotalRecvData[j]=countTotalRecvData[j]+countRecvData;
 	      countSendData=send(fd,message,strlen(message),0);
@@ -160,33 +148,6 @@ int main(int argc, char* argv[]) {
 		countTotalSendData[j]=countTotalSendData[j]+countSendData;
 	      }
 	    }
-	    /* for(k=0;k<max_client;k++){
-	      if((client[j].fd)!=-1){
-		check=1;
-		break;
-	      }else{
-		check=0;
-		continue;		
-	      }
-	    }
-	    if(check==0){
-	      do{
-		printf("Do you want to keep server working?\n");
-		printf("1. Yes\n");
-		printf("2. No\n");
-		scanf("%d",&choose);
-		if(choose!=1&&choose!=2) printf("Input failed!\n");
-	      }while(choose!=1&&choose!=2);
-	      if(choose==1){
-		printf("Server is working!\n");
-		continue;
-	      }
-	      else if(choose==2){
-		printf("Server is closed!\n");	  
-		close(sockfd);
-		return 0;
-	      }
-	      }*/
 	    if(--activity<=0)break;
 	  }
       }
