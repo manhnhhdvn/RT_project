@@ -102,6 +102,10 @@ int main(int argc, char* argv[]) {
             // sendMes << "Right" << endl;  // key right
             strcpy(sendMes,"Right");
             break;
+        case ' ':
+            // sendMes << "Right" << endl;  // key right
+            strcpy(sendMes,"Space");
+            break;
         case 'q':
             // sendMes << "Right" << endl;  // key right
             strcpy(sendMes,"q");
