@@ -21,7 +21,7 @@ int main(){
   }else printf("Socket retrieve success!...\n");
   memset(&server,'0',sizeof(server));
   server.sin_family=AF_INET;
-  server.sin_addr.s_addr=inet_addr("127.0.0.1");
+  server.sin_addr.s_addr=inet_addr("192.168.0.115");
   server.sin_port=htons(5678);
   if(connect(sockfd,(struct sockaddr *)&server, sizeof(server))==-1){
     printf("Connect failed!\n");

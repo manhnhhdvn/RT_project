@@ -1,12 +1,16 @@
-#include<stdio.h>
-#include<sys/types.h>
-#include<sys/socket.h>
-#include<string.h>
-#include<ctype.h>
-#include<netinet/in.h>
-#include<stdlib.h>
-#include<sys/select.h>
-#include<poll.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <string.h>
+#include <ctype.h>
+#include <netinet/in.h>
+#include <stdlib.h>
+#include <sys/select.h>
+#include <poll.h>
+
+#include <ros/ros.h>
+#include <arpa/inet.h>
+
 #define MAX_SIZE 2000
 #define TIME_OUT 10000
 #define MAX_CONN 1024
@@ -16,7 +20,9 @@ int main(){
   int countTotalRecvData[MAX_CONN], countTotalSendData[MAX_CONN], countRecvData=0, countSendData=0;
   struct sockaddr_in server,clients;
   socklen_t socksize=sizeof(struct sockaddr_in);
-  char *message=malloc(MAX_SIZE);
+  char * message;
+  // char *message=malloc(MAX_SIZE);
+  message = (char*) malloc (MAX_SIZE);
   strcpy(message,"");
   struct pollfd client[MAX_CONN];
   int max_client;
@@ -30,7 +36,9 @@ int main(){
   }else printf("Socket retrieve success!...\n");
   memset(&server,'0',sizeof(server));
   server.sin_family=AF_INET;
-  server.sin_addr.s_addr=inet_addr("192.168.0.107");
+
+  server.sin_addr.s_addr = inet_addr("192.168.0.107");
+
   server.sin_port=htons(5678);
   printf("Bind the socket, please wait...\n");
   if(bind(sockfd,(struct sockaddr*)&server,sizeof(server))==-1){
@@ -94,20 +102,21 @@ int main(){
 	if(client[j].revents & (POLLIN | POLLERR))
 	  {
 	    //while(1){
-	    message=malloc(MAX_SIZE);
+	    // message=malloc(MAX_SIZE);
+	    message = (char*) malloc (MAX_SIZE);
 	    strcpy(message,"");
 	    countRecvData=recv(fd,message,2000,0);
 	    printf("Message from client in port %d: %s\n",fd,message);
 	    if(countRecvData==-1){
 	      printf("Receive data failed!\n");
-	      close(fd);close(sockfd);
+	      shutdown(fd,2);shutdown(sockfd,2);
 	      return 1;
 	    }else if((strcmp(message,"q")==0)||(strcmp(message,"Q")==0)){
 	      numberClient--;
 	      printf("Client in port %d disconnected! Having %d client(s) connect to server in this time. \n",fd,numberClient);
 	      printf("Total size of data received from port %d: %d\n",fd,countTotalRecvData[j]);
 	      printf("Total size of data sent to port %d: %d\n",fd,countTotalSendData[j]);
-	      close(fd);
+	      shutdown(fd,2);
 	      client[j].fd=-1;
 	      /*for(k=0;k<max_client;k++){
 		printf("asdf");	
@@ -134,7 +143,7 @@ int main(){
 		}
 		else if(choose==2){
 		  printf("Server is closed!\n");	  
-		  close(sockfd);
+		  shutdown(sockfd,2);
 		  return 0;
 		}
 	      }
@@ -142,11 +151,12 @@ int main(){
 	    }else{
 	      countTotalRecvData[j]=countTotalRecvData[j]+countRecvData;
 	      countSendData=send(fd,message,strlen(message),0);
-	      message=malloc(MAX_SIZE);
+	      // message=malloc(MAX_SIZE);
+	      message = (char*) malloc (MAX_SIZE);
 	      strcpy(message,"");
 	      if(countSendData==-1){
 		printf("Send data failed!\n");
-		close(fd);close(sockfd);
+		shutdown(fd,2);shutdown(sockfd,2);
 		return 1;
 	      }else{
 		countTotalSendData[j]=countTotalSendData[j]+countSendData;
