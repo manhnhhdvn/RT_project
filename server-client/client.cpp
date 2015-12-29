@@ -85,7 +85,7 @@ int main(int argc, char* argv[]) {
     while(!kbhit()){
       // printf("Press a key: ");
     }
-    switch(getchar()) {
+    switch(c = getchar()) {
         case 'w':
             // sendMes << "Up" << endl;//key up
             strcpy(sendMes,"Up");
@@ -103,12 +103,17 @@ int main(int argc, char* argv[]) {
             strcpy(sendMes,"Right");
             break;
         case ' ':
-            // sendMes << "Right" << endl;  // key right
             strcpy(sendMes,"Space");
             break;
         case 'q':
-            // sendMes << "Right" << endl;  // key right
-            strcpy(sendMes,"q");
+        case 'Q':
+            strcpy(sendMes,"Quit");
+            break;
+        case 'r':
+            strcpy(sendMes,"Disable motors");
+            break;
+        case 'e':
+            strcpy(sendMes,"Enable motors");
             break;
         default:
             // sendMes << "null" << endl;  // not arrow
@@ -120,7 +125,7 @@ int main(int argc, char* argv[]) {
     if(countSendData==-1){
       printf("Send data failed!\n");
       return 1;
-    }else if((strcmp(sendMes,"q")==0)||(strcmp(sendMes,"Q")==0)){
+    }else if((strcmp(sendMes,"Quit")==0)){
       sendMes = (char *) malloc (MAX_SIZE);
       strcpy(sendMes,"");
       printf("Disconnected!\n");
