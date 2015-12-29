@@ -49,6 +49,7 @@ bool KeyOpCore::init() {
 	nh.getParam("angular_vel_step", angular_vel_step);
 	nh.getParam("angular_vel_max", angular_vel_max);
 	nh.getParam("wait_for_connection", wait_for_connection_);
+	nh.getParam("ip_robot", ip_robot);
 
 	ROS_INFO_STREAM(
 			"KeyOpCore : using linear  vel step [" << linear_vel_step << "].");
@@ -154,13 +155,20 @@ void KeyOpCore::keyboardInputLoop() {
 	raw.c_cc[VEOF] = 2;
 	tcsetattr(key_file_descriptor, TCSANOW, &raw);
 
-	puts("Reading from keyboard");
+	puts("READING MESSAGE FROM CLIENT!");
 	puts("---------------------------");
 	puts("Forward/back arrows : linear velocity incr/decr.");
 	puts("Right/left arrows : angular velocity incr/decr.");
 	puts("Spacebar : reset linear/angular velocities.");
 	puts("d : disable motors.");
 	puts("e : enable motors.");
+	puts("--------------------");
+	puts("w : Go straight.");
+	puts("s : Go back.");
+	puts("a : Turn left.");
+	puts("d : Turn right.");
+	puts("space : Stop.");
+	puts("--------------------");
 	puts("q : quit.");
 	char c;
 
@@ -196,7 +204,7 @@ void KeyOpCore::keyboardInputLoop() {
   }else printf("Socket retrieve success!...\n");
   memset(&server,'0',sizeof(server));
   server.sin_family=AF_INET;
-  server.sin_addr.s_addr = inet_addr("192.168.0.107");
+  server.sin_addr.s_addr = inet_addr(ip_robot.c_str());
   server.sin_port=htons(5678);
   printf("Bind the socket, please wait...\n");
   if(bind(sockfd,(struct sockaddr*)&server,sizeof(server))==-1){
@@ -265,7 +273,7 @@ void KeyOpCore::keyboardInputLoop() {
 	    strcpy(message,"");
 	    countRecvData=recv(fd,message,2000,0);
 	    printf("Message from client in port %d: %s\n",fd,message);
-
+	    
 	    
 	    if (strcmp(message,"Up") == 0)
 	    		c = kobuki_msgs::KeyboardInput::KeyCode_Up;
@@ -277,6 +285,12 @@ void KeyOpCore::keyboardInputLoop() {
 	    		c = kobuki_msgs::KeyboardInput::KeyCode_Right;
 	    if (strcmp(message,"Space") == 0)
 	    		c = kobuki_msgs::KeyboardInput::KeyCode_Space;
+	    if (strcmp(message,"Disable motors") == 0)
+	    		c = 'r';
+	    if (strcmp(message,"Enable motors") == 0)
+	    		c = 'e';
+	    if (strcmp(message,"Quit") == 0)
+	    		c = 'q';
 	    
 
 	    processKeyboardInput(c);
@@ -285,6 +299,8 @@ void KeyOpCore::keyboardInputLoop() {
 	      shutdown(fd,2);shutdown(sockfd,2);
 	      exit(1);
 	    }else if((strcmp(message,"q")==0)||(strcmp(message,"Q")==0)){
+	      c = kobuki_msgs::KeyboardInput::KeyCode_Space;	
+	      processKeyboardInput(c);
 	      numberClient--;
 	      printf("Client in port %d disconnected! Having %d client(s) connect to server in this time. \n",fd,numberClient);
 	      printf("Total size of data received from port %d: %d\n",fd,countTotalRecvData[j]);
@@ -364,7 +380,7 @@ void KeyOpCore::processKeyboardInput(char c) {
 		quit_requested = true;
 		break;
 	}
-	case 'd': {
+	case 'r': {
 		disable();
 		break;
 	}

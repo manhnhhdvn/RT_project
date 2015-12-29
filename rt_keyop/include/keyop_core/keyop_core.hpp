@@ -31,6 +31,7 @@ private:
 	double linear_vel_step, linear_vel_max;
 	double angular_vel_step, angular_vel_max;
 	std::string name;
+	std::string ip_robot;
 
 	void enable();
 	void disable();
